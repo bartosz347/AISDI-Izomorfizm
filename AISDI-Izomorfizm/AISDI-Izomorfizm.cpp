@@ -23,7 +23,7 @@ int main(int argc, char *argv)
 
 	Isomorphism<int> isomorphism(G1, G2);
 
-	std::cout << isomorphism.checkIsomorphism() << std::endl;
+	isomorphism.checkIsomorphism();
 
 	
 
