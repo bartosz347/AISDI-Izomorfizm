@@ -21,31 +21,7 @@ public:
 		}
 		else
 			std::cout << "Nieizomorficzne" << std::endl;
-	}
-
-	bool runIsomorphismCheck()
-	{
-		if (G1.verticesNo != G2.verticesNo)
-			return false;
-		
-		std::vector<Vertex> verticesFromG2(G2.verticesNo);
-		std::vector<K> bijectionFunction(G1.verticesNo, -1);
-		for (K i = 0; i < G2.verticesNo; i++)
-		{
-			verticesFromG2[i].no = i;
-		}
-
-		// invariants calculate and so
-
-		if (isomorph(0, verticesFromG2, bijectionFunction)) {
-			return true;
-		}
-		else
-			return false;
-	}
-
-	
-
+	}	
 	
 	~Isomorphism()
 	{}
@@ -53,6 +29,8 @@ private:
 	Graph<K> G1; // we start by taking subgraphs G1(k) and trying to extend by adding from G2
 	Graph<K> G2;
 
+	std::vector<K> invariantsG1;
+	std::vector<K> invariantsG2;
 	std::vector<K> finalBijectionFunction;
 
 	class Vertex
@@ -63,6 +41,27 @@ private:
 		K no;
 		bool isUsed;
 	};
+
+	bool runIsomorphismCheck()
+	{
+		if (G1.verticesNo != G2.verticesNo)
+			return false;
+
+		calculateInvariants();
+
+		std::vector<Vertex> verticesFromG2(G2.verticesNo);
+		std::vector<K> bijectionFunction(G1.verticesNo, -1);
+		for (K i = 0; i < G2.verticesNo; i++)
+		{
+			verticesFromG2[i].no = i;
+		}
+
+		if (isomorph(0, verticesFromG2, bijectionFunction)) {
+			return true;
+		}
+		else
+			return false;
+	}
 
 	bool isomorph(K k, std::vector<Vertex> &verticesFromG2, std::vector<K> &bijectionFunction)
 	{
@@ -83,13 +82,18 @@ private:
 			if (isomorph(k + 1, verticesFromG2_new, bijectionFunction_new)) // let's try to extend it to k+1 subgraph of G1
 				return true;
 
-			// if extending fails - we proceed with the next unused vertex from G2		
+			// if extending fails - we go back and proceed with the next vertex
 		}
 		return false;
 	}
 
 	bool canBeMatched(const K &k, const Vertex &vertex, const std::vector<K> &bijectionFunction) const
-	{
+	{		
+		// invariants equality is necessery (but not sufficient)
+		if (invariantsG1[k] != invariantsG2[vertex.no])
+			return false;
+
+		// let's check the new vertex
 		for (K i = 0; i < G1.verticesNo; i++)
 		{
 			if(bijectionFunction[i] != -1)
@@ -110,8 +114,14 @@ private:
 
 	}
 
-
-
+	void calculateInvariants()
+	{
+		for (int i = 0; i < G1.verticesNo;i++)
+		{
+			invariantsG1.push_back(G1.getInvariant(i));
+			invariantsG2.push_back(G2.getInvariant(i));
+		}
+	}
 
 };
 

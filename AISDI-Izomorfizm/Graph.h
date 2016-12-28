@@ -36,6 +36,15 @@ public:
 		return adjMatrix[begin][end] == 1;
 	}
 
+	K getInvariant(K node)
+	{
+		// degree
+		int degree = 0;
+		for (auto elem : adjMatrix[node])
+			if (elem == 1) degree++;
+		return degree;
+	}
+
 	~Graph()
 	{}
 private:
