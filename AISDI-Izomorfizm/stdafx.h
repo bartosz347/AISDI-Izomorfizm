@@ -12,6 +12,11 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
+
+
+#include "Isomorphism.h"
+#include "Graph.h"
 
 
 

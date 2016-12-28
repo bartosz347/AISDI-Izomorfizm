@@ -4,15 +4,29 @@
 #include "stdafx.h"
 
 
-int main()
+int main(int argc, char *argv)
 {
-	std::system("cls||clear");
-	std::cout << "Test" << std::endl;
-	std::string a,b;
-	std::cin >> a;
-	std::cin >> b;
-	std::cout << a;
-	std::cout << b;
+	std::fstream fs;
+	int verticesNo;
+
+	fs.open("graf1.txt", std::fstream::in);
+	fs >> verticesNo;
+	fs.close();
+	Graph<int> G1(verticesNo);
+	G1.loadFromFile("graf1.txt");
+
+	fs.open("graf2.txt", std::fstream::in);
+	fs >> verticesNo;
+	fs.close();
+	Graph<int> G2(verticesNo);
+	G2.loadFromFile("graf2.txt");
+
+	Isomorphism<int> isomorphism(G1, G2);
+
+	std::cout << isomorphism.checkIsomorphism() << std::endl;
+
+	
+
 	return 0;
 }
 
