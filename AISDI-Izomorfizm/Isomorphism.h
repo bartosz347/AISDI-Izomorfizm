@@ -8,8 +8,6 @@ template <typename K>
 class Isomorphism
 {
 public:
-
-
 	Isomorphism(const Graph<K> &G1, const Graph<K> &G2) : G1(G1), G2(G2)
 	{}
 
@@ -36,13 +34,12 @@ private:
 	class Vertex
 	{
 	public:
-		Vertex() : isUsed(false) {}
-		Vertex(K no) : no(no), isUsed(false) {}
+		Vertex(K no = -1) : no(no), isUsed(false) {}
 		K no;
 		bool isUsed;
 	};
 
-	bool runIsomorphismCheck()
+	bool runIsomorphismCheck() 
 	{
 		if (G1.verticesNo != G2.verticesNo)
 			return false;
@@ -63,7 +60,7 @@ private:
 			return false;
 	}
 
-	bool isomorph(K k, std::vector<Vertex> &verticesFromG2, std::vector<K> &bijectionFunction)
+	bool isomorph(const K &k, const std::vector<Vertex> &verticesFromG2, const std::vector<K> &bijectionFunction)
 	{
 		if (k == G1.verticesNo) {
 			finalBijectionFunction = std::move(bijectionFunction);
@@ -104,7 +101,7 @@ private:
 		return true;
 	}
 
-	void printBijectionFunction()
+	void printBijectionFunction() const
 	{
 		int i = 0;
 		for (auto elem : finalBijectionFunction) {

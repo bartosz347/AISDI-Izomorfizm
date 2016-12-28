@@ -6,12 +6,11 @@
 
 int main(int argc, const char *argv[])
 {
+
 #ifdef _DEBUG
 	std::string graph1("graf1_bb.txt");
 	std::string graph2("graf2_bb.txt");
-#endif // DEBUG
-	
-	
+#endif // DEBUG		
 	
 #ifndef _DEBUG
 	if (argc != 3) {
