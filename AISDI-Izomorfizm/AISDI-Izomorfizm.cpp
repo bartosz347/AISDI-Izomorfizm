@@ -1,6 +1,3 @@
-// AISDI-Izomorfizm.cpp : Defines the entry point for the console application.
-//
-
 #include "stdafx.h"
 
 
@@ -22,27 +19,16 @@ int main(int argc, const char *argv[])
 	std::string graph2(argv[2]);
 #endif // !DEBUG
 
-
-	std::fstream fs;
-	int verticesNo;
-
-	fs.open(graph1, std::fstream::in);
-	fs >> verticesNo;
-	fs.close();
-	Graph<int> G1(verticesNo);
-	G1.loadFromFile(graph1);
-
-	fs.open(graph2, std::fstream::in);
-	fs >> verticesNo;
-	fs.close();
-	Graph<int> G2(verticesNo);
-	G2.loadFromFile(graph2);
+	Graph<int> G1(graph1);
+	Graph<int> G2(graph2);
 
 	Isomorphism<int> isomorphism(G1, G2);
 	isomorphism.checkIsomorphism();
 
 
+#ifdef _DEBUG
 	std::system("pause");
+#endif // DEBUG	
 	return 0;
 }
 
