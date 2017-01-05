@@ -24,8 +24,8 @@ public:
 	~Isomorphism()
 	{}
 private:
-	Graph<K> G1; // we start by taking subgraphs G1(k) and trying to extend by adding from G2
-	Graph<K> G2;
+	const Graph<K> &G1; // we start by taking subgraphs G1(k) and trying to extend by adding from G2
+	const Graph<K> &G2;
 
 	std::vector<K> invariantsG1;
 	std::vector<K> invariantsG2;
