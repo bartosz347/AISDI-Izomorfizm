@@ -5,6 +5,8 @@ int main(int argc, const char *argv[])
 {
 
 #ifdef _DEBUG
+	(void)argc;
+	(void)argv;
 	std::string graph1("graf1_bb.txt");
 	std::string graph2("graf2_bb.txt");
 #endif // DEBUG		

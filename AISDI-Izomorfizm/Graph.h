@@ -73,15 +73,13 @@ private:
 			{
 				for (K j = 0; j < verticesNo; j++)
 				{
-					if(adjMatrix[i][j] == 1)
+					if(adjMatrix[i][j] == 1 && std::find(p.begin(),p.end(),j) == p.end()) // edge exists and vertex not yet counted
 						p.push_back(j);
 				}
 			}
 		}
 
-		std::sort(p.begin(), p.end());
-		auto it = std::unique(p.begin(), p.end());
-		return static_cast<int>(std::distance(p.begin(), it));
+		return static_cast<K>(p.size());
 	}
 
 	
