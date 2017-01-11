@@ -71,8 +71,7 @@ private:
 		for (auto elem : adjMatrix[node])
 			if (elem == 1) degree++;
 
-		for (K i = node+1; i < verticesNo; i++)
-		{
+		for (K i = node+1; i < verticesNo; i++)	{
 			if (adjMatrix[i][node] == 1)
 				degree++;
 		}
@@ -83,10 +82,8 @@ private:
 	{
 		K i = 0;
 		for (auto elem : adjMatrix[node]) {
-			if (elem == 1 && std::find(p.begin(), p.end(), i) == p.end()) {
-
-				p.push_back(i);
-			}
+			if (elem == 1 && std::find(p.begin(), p.end(), i) == p.end()) 
+				p.push_back(i);			
 			i++;
 		}
 
@@ -106,8 +103,7 @@ private:
 			i++;
 		}
 
-		for (K i = node + 1; i < verticesNo; i++)
-		{
+		for (K i = node + 1; i < verticesNo; i++) {
 			if (adjMatrix[i][node] == 1)
 				addNewVertexesThatNodeIsLinkedWith(p, i);
 		}
