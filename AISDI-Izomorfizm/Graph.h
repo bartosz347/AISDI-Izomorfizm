@@ -24,14 +24,13 @@ public:
 		if (begin >= verticesNo || end >= verticesNo)
 			throw std::invalid_argument("invalid vertex id");
 
-		adjMatrix[begin][end] = 1;
-		adjMatrix[end][begin] = 1;
+		begin >= end ? adjMatrix[begin][end] = 1 : adjMatrix[end][begin] = 1;
 		edgesNo++;
 	}
 
 	bool isEdge(const K &begin, const K &end) const
 	{
-		return adjMatrix[begin][end] == 1;
+		return begin >= end ? adjMatrix[begin][end] == 1 : adjMatrix[end][begin] == 1;
 	}
 
 	const K getInvariant(const K &node) const
@@ -51,7 +50,11 @@ private:
 		fs.open(filename, std::fstream::in);
 		int v1, v2;
 		fs >> verticesNo;
-		adjMatrix = std::vector<std::vector<bool>>(verticesNo, std::vector<bool>(verticesNo));
+		adjMatrix = std::vector<std::vector<bool>>(verticesNo);
+		for (K i = 0; i < verticesNo; i++)
+		{
+			adjMatrix[i] = std::vector<bool>(i+1); // TODO verify
+		}
 		while (fs >> v1 && fs >> v2)
 			insertEdge(v1, v2);
 		fs.close();
@@ -62,23 +65,52 @@ private:
 		int degree = 0;
 		for (auto elem : adjMatrix[node])
 			if (elem == 1) degree++;
+
+		for (K i = node+1; i < verticesNo; i++)
+		{
+			if (adjMatrix[i][node] == 1)
+				degree++;
+		}
 		return degree;
+	}
+
+	void addNewVertexes(std::vector<K> &p, K node) const
+	{
+		K i = 0;
+		for (auto elem : adjMatrix[node]) {
+			if (elem == 1 && std::find(p.begin(), p.end(), i) == p.end()) {
+
+				p.push_back(i);
+			}
+			i++;
+		}
+
+		for (K i = node + 1; i < verticesNo; i++) {
+			if (adjMatrix[i][node] == 1 && std::find(p.begin(), p.end(), i) == p.end())
+				p.push_back(i);
+		}
 	}
 
 	const K getNodeTwoPath(const K &node) const
 	{
 		std::vector<K> p;
-				
-		for (K i = 0; i < verticesNo; i++)
-		{
-			if (adjMatrix[node][i] == 1)
-			{
-				for (K j = 0; j < verticesNo; j++)
-				{
-					if(adjMatrix[i][j] == 1 && std::find(p.begin(),p.end(),j) == p.end()) // edge exists and vertex not yet counted
-						p.push_back(j);
-				}
+		K i = 0;
+		for (auto elem : adjMatrix[node]) {
+			if (elem == 1) {
+
+				addNewVertexes(p, i);
+
 			}
+			i++;
+		}
+
+		for (K i = node + 1; i < verticesNo; i++)
+		{
+			if (adjMatrix[i][node] == 1) {
+
+				addNewVertexes(p, i);
+			}
+				
 		}
 
 		return static_cast<K>(p.size());
