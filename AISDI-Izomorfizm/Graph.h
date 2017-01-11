@@ -24,6 +24,9 @@ public:
 		if (begin >= verticesNo || end >= verticesNo)
 			throw std::invalid_argument("invalid vertex id");
 
+		if (begin == end)
+			throw std::invalid_argument("");
+
 		begin >= end ? adjMatrix[begin][end] = 1 : adjMatrix[end][begin] = 1;
 		edgesNo++;
 	}
@@ -48,12 +51,14 @@ private:
 	{
 		std::fstream fs;
 		fs.open(filename, std::fstream::in);
+		if (!fs.good())
+			throw std::runtime_error("cannot open file");
 		int v1, v2;
 		fs >> verticesNo;
 		adjMatrix = std::vector<std::vector<bool>>(verticesNo);
 		for (K i = 0; i < verticesNo; i++)
 		{
-			adjMatrix[i] = std::vector<bool>(i+1); // TODO verify
+			adjMatrix[i] = std::vector<bool>(i+1);
 		}
 		while (fs >> v1 && fs >> v2)
 			insertEdge(v1, v2);
@@ -74,7 +79,7 @@ private:
 		return degree;
 	}
 
-	void addNewVertexes(std::vector<K> &p, K node) const
+	void addNewVertexesThatNodeIsLinkedWith(std::vector<K> &p, K node) const
 	{
 		K i = 0;
 		for (auto elem : adjMatrix[node]) {
@@ -96,21 +101,15 @@ private:
 		std::vector<K> p;
 		K i = 0;
 		for (auto elem : adjMatrix[node]) {
-			if (elem == 1) {
-
-				addNewVertexes(p, i);
-
-			}
+			if (elem == 1) 
+				addNewVertexesThatNodeIsLinkedWith(p, i);
 			i++;
 		}
 
 		for (K i = node + 1; i < verticesNo; i++)
 		{
-			if (adjMatrix[i][node] == 1) {
-
-				addNewVertexes(p, i);
-			}
-				
+			if (adjMatrix[i][node] == 1)
+				addNewVertexesThatNodeIsLinkedWith(p, i);
 		}
 
 		return static_cast<K>(p.size());
