@@ -41,7 +41,7 @@ private:
 
 	bool runIsomorphismCheck() 
 	{
-		if (G1.verticesNo != G2.verticesNo)
+		if (G1.verticesNo != G2.verticesNo || G1.edgesNo != G2.edgesNo)
 			return false;
 
 		calculateInvariants();

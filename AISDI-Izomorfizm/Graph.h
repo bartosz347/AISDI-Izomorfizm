@@ -17,6 +17,7 @@ public:
 	}
 
 	K verticesNo;
+	K edgesNo;
 
 	void insertEdge(const K &begin, const K &end)
 	{
@@ -25,6 +26,7 @@ public:
 
 		adjMatrix[begin][end] = 1;
 		adjMatrix[end][begin] = 1;
+		edgesNo++;
 	}
 
 	bool isEdge(const K &begin, const K &end) const
