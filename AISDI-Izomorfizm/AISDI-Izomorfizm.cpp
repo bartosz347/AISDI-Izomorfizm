@@ -7,8 +7,8 @@ int main(int argc, const char *argv[])
 #ifdef _DEBUG
 	(void)argc;
 	(void)argv;
-	std::string graph1("tests/set20/graf1.txt");
-	std::string graph2("tests/set20/graf2.txt");
+	std::string graph1("tests/4/graf1.txt");
+	std::string graph2("tests/4/graf2.txt");
 #endif // DEBUG		
 	
 #ifndef _DEBUG

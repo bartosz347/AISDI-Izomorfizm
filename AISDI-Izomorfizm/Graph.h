@@ -8,27 +8,32 @@ template <typename K>
 class Graph
 {
 public:
+	Graph(const K &verticesNo) : vertexCount(verticesNo)
+	{
+		adjMatrix = std::vector<std::vector<bool>>(verticesNo);
+		for (size_t i = 0; i < verticesNo; i++) {
+			adjMatrix[i] = std::vector<bool>(i + 1, 0);
+		}
+	}
 
-	Graph(const K &verticesNo) : adjMatrix(std::vector<std::vector<bool>>(verticesNo, std::vector<bool>(verticesNo))), verticesNo(verticesNo)
-	{}
 	Graph(std::string fileName) 
 	{
 		loadFromFile(fileName);
 	}
 
-	K verticesNo;
-	K edgesNo;
+	K vertexCount;
+	K edgeCount;
 
 	void insertEdge(const K &begin, const K &end)
 	{
-		if (begin >= verticesNo || end >= verticesNo)
+		if (begin >= vertexCount || end >= vertexCount)
 			throw std::invalid_argument("invalid vertex id");
 
 		if (begin == end)
 			throw std::invalid_argument("");
 
 		begin >= end ? adjMatrix[begin][end] = 1 : adjMatrix[end][begin] = 1;
-		edgesNo++;
+		edgeCount++;
 	}
 
 	bool isEdge(const K &begin, const K &end) const
@@ -36,10 +41,12 @@ public:
 		return begin >= end ? adjMatrix[begin][end] == 1 : adjMatrix[end][begin] == 1;
 	}
 
-	const K getInvariant(const K &node) const
+	const K getInvariant(const K &node, int type = 0) const
 	{
-		return getNodeTwoPath(node);
-		//return getNodeDegree(node);
+		if(type == 0)
+			return getNodeTwoPath(node);
+		else
+			return getNodeDegree(node);
 	}
 
 	~Graph()
@@ -54,11 +61,10 @@ private:
 		if (!fs.good())
 			throw std::runtime_error("cannot open file");
 		int v1, v2;
-		fs >> verticesNo;
-		adjMatrix = std::vector<std::vector<bool>>(verticesNo);
-		for (K i = 0; i < verticesNo; i++)
-		{
-			adjMatrix[i] = std::vector<bool>(i+1);
+		fs >> vertexCount;
+		adjMatrix = std::vector<std::vector<bool>>(vertexCount);
+		for (size_t i = 0; i < vertexCount; i++)	{
+			adjMatrix[i] = std::vector<bool>(i+1, 0);
 		}
 		while (fs >> v1 && fs >> v2)
 			insertEdge(v1, v2);
@@ -71,7 +77,7 @@ private:
 		for (auto elem : adjMatrix[node])
 			if (elem == 1) degree++;
 
-		for (K i = node+1; i < verticesNo; i++)	{
+		for (size_t i = node+1; i < vertexCount; i++)	{
 			if (adjMatrix[i][node] == 1)
 				degree++;
 		}
@@ -87,7 +93,7 @@ private:
 			i++;
 		}
 
-		for (K i = node + 1; i < verticesNo; i++) {
+		for (size_t i = node + 1; i < vertexCount; i++) {
 			if (adjMatrix[i][node] == 1 && std::find(p.begin(), p.end(), i) == p.end())
 				p.push_back(i);
 		}
@@ -96,21 +102,20 @@ private:
 	const K getNodeTwoPath(const K &node) const
 	{
 		std::vector<K> p;
-		K i = 0;
+		size_t i = 0;
 		for (auto elem : adjMatrix[node]) {
 			if (elem == 1) 
 				addNewVertexesThatNodeIsLinkedWith(p, i);
 			i++;
 		}
 
-		for (K i = node + 1; i < verticesNo; i++) {
+		for (size_t i = node + 1; i < vertexCount; i++) {
 			if (adjMatrix[i][node] == 1)
 				addNewVertexesThatNodeIsLinkedWith(p, i);
 		}
 
 		return static_cast<K>(p.size());
 	}
-
 	
 };
 

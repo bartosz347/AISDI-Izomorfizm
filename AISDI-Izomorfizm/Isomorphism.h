@@ -41,14 +41,14 @@ private:
 
 	bool runIsomorphismCheck() 
 	{
-		if (G1.verticesNo != G2.verticesNo || G1.edgesNo != G2.edgesNo)
+		if (G1.vertexCount != G2.vertexCount || G1.edgeCount != G2.edgeCount)
 			return false;
 
 		calculateInvariants();
 
-		std::vector<Vertex> verticesFromG2(G2.verticesNo);
-		std::vector<K> bijectionFunction(G1.verticesNo, -1);
-		for (K i = 0; i < G2.verticesNo; i++)
+		std::vector<Vertex> verticesFromG2(G2.vertexCount);
+		std::vector<K> bijectionFunction(G1.vertexCount, -1);
+		for (size_t i = 0; i < G2.vertexCount; i++)
 		{
 			verticesFromG2[i].no = i;
 		}
@@ -60,23 +60,23 @@ private:
 			return false;
 	}
 
-	bool isomorph(const K &k, const std::vector<Vertex> &verticesFromG2, const std::vector<K> &bijectionFunction)
+	bool isomorph(const K &currentlyMatchedVertexNo, const std::vector<Vertex> &verticesFromG2, const std::vector<K> &bijectionFunction)
 	{
-		if (k == G1.verticesNo) {
+		if (currentlyMatchedVertexNo == G1.vertexCount) {
 			finalBijectionFunction = std::move(bijectionFunction);
 			return true; // all vertices matched ( we have G1.verticesNo vertices )			
 		}
 
 		for (auto vertex : verticesFromG2) {
-			if (vertex.isUsed == true || !canBeMatched(k, vertex, bijectionFunction)) // we check all vertices from G2 that aren't yet mapped
+			if (vertex.isUsed == true || !canBeMatched(Vertex(currentlyMatchedVertexNo), vertex, bijectionFunction)) // we check all vertices from G2 that aren't yet mapped
 				continue;
 
 			std::vector<Vertex> verticesFromG2_new(verticesFromG2);
 			std::vector<K> bijectionFunction_new(bijectionFunction);
 			verticesFromG2_new[vertex.no].isUsed = true;
-			bijectionFunction_new[k] = vertex.no; // we've found a vertex in G2 that can be matched, so we save it in bijectionFunction
+			bijectionFunction_new[currentlyMatchedVertexNo] = vertex.no; // we've found a vertex in G2 that can be matched, so we save it in bijectionFunction
 
-			if (isomorph(k + 1, verticesFromG2_new, bijectionFunction_new)) // let's try to extend it to k+1 subgraph of G1
+			if (isomorph(currentlyMatchedVertexNo + 1, verticesFromG2_new, bijectionFunction_new)) // let's try to extend it to k+1 subgraph of G1
 				return true;
 
 			// if extending fails - we go back and proceed with the next vertex
@@ -84,17 +84,17 @@ private:
 		return false;
 	}
 
-	bool canBeMatched(const K &k, const Vertex &vertex, const std::vector<K> &bijectionFunction) const
+	bool canBeMatched(const Vertex &vertexFromG1, const Vertex &vertexFromG2, const std::vector<K> &bijectionFunction) const
 	{		
-		// invariants equality is necessery (but not sufficient)
-		if (invariantsG1[k] != invariantsG2[vertex.no])
+		// invariants equality is necessary (but not sufficient)
+		if (invariantsG1[vertexFromG1.no] != invariantsG2[vertexFromG2.no])
 			return false;
 
 		// let's check the new vertex
-		for (K i = 0; i < G1.verticesNo; i++)
+		for (size_t i = 0; i < G1.vertexCount; i++)
 		{
 			if(bijectionFunction[i] != -1)
-				if (G1.isEdge(i, k) != G2.isEdge(bijectionFunction[i], vertex.no)) {
+				if (G1.isEdge(i, vertexFromG1.no) != G2.isEdge(bijectionFunction[i], vertexFromG2.no)) {
 					return false;
 				}
 		}
@@ -113,7 +113,7 @@ private:
 
 	void calculateInvariants()
 	{
-		for (int i = 0; i < G1.verticesNo;i++)
+		for (size_t i = 0; i < G1.vertexCount; i++)
 		{
 			invariantsG1.push_back(G1.getInvariant(i));
 			invariantsG2.push_back(G2.getInvariant(i));
