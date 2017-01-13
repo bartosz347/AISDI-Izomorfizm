@@ -16,11 +16,6 @@ public:
 		}
 	}
 
-	Graph(std::string fileName) 
-	{
-		loadFromFile(fileName);
-	}
-
 	K vertexCount;
 	K edgeCount;
 
@@ -28,9 +23,6 @@ public:
 	{
 		if (begin >= vertexCount || end >= vertexCount)
 			throw std::invalid_argument("invalid vertex id");
-
-		if (begin == end)
-			throw std::invalid_argument("");
 
 		begin >= end ? adjMatrix[begin][end] = 1 : adjMatrix[end][begin] = 1;
 		edgeCount++;
@@ -43,6 +35,7 @@ public:
 
 	const K getInvariant(const K &node, int type = 0) const
 	{
+		// TODO combining twopath and degree gives better perf results
 		if(type == 0)
 			return getNodeTwoPath(node);
 		else
@@ -54,22 +47,7 @@ public:
 private:
 	std::vector< std::vector<bool> > adjMatrix;
 
-	void loadFromFile(std::string filename)
-	{
-		std::fstream fs;
-		fs.open(filename, std::fstream::in);
-		if (!fs.good())
-			throw std::runtime_error("cannot open file");
-		int v1, v2;
-		fs >> vertexCount;
-		adjMatrix = std::vector<std::vector<bool>>(vertexCount);
-		for (size_t i = 0; i < vertexCount; i++)	{
-			adjMatrix[i] = std::vector<bool>(i+1, 0);
-		}
-		while (fs >> v1 && fs >> v2)
-			insertEdge(v1, v2);
-		fs.close();
-	}
+
 
 	const K getNodeDegree(const K &node) const
 	{

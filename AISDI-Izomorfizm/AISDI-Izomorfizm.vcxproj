@@ -158,6 +158,9 @@
     <ClCompile Include="AISDI-Izomorfizm.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

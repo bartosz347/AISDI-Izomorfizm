@@ -11,14 +11,14 @@ public:
 	Isomorphism(const Graph<K> &G1, const Graph<K> &G2) : G1(G1), G2(G2)
 	{}
 
-	void checkIsomorphism()
+	std::vector<K> getBijectionFunction()
 	{
 		if (runIsomorphismCheck() == true) {
-			std::cout << "Izomorficzne" << std::endl;
-			printBijectionFunction();
+			return finalBijectionFunction;
 		}
-		else
-			std::cout << "Nieizomorficzne" << std::endl;
+		else {
+			return std::vector<K>(0);
+		}
 	}	
 	
 	~Isomorphism()
@@ -99,16 +99,6 @@ private:
 				}
 		}
 		return true;
-	}
-
-	void printBijectionFunction() const
-	{
-		int i = 0;
-		for (auto elem : finalBijectionFunction) {
-			std::cout << i << " --> " << elem << std::endl;
-			i++;
-		}
-
 	}
 
 	void calculateInvariants()
